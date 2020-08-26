@@ -53,17 +53,20 @@ func (e *EmailServer) SendEmail(emData EmailData) error {
 	m.SetHeader("Subject", emData.Subject)
 	m.SetBody("text/html", emData.MessageHTML)
 
-	for _, a := range emData.Attachments {
-		m.Attach(a)
+	if emData.Attachments != nil {
+		for _, a := range emData.Attachments {
+			m.Attach(a)
+		}
 	}
 
-	for _, e := range emData.Embedded {
-		m.Embed(e)
+	if emData.Embedded != nil {
+		for _, e := range emData.Embedded {
+			m.Embed(e)
+		}
 	}
 
 	d := gomail.NewDialer(e.EmailServerConfig.URI, e.EmailServerConfig.Port, e.EmailServerConfig.User, e.EmailServerConfig.Password)
-	errDial := d.DialAndSend(m)
-	if errDial != nil {
+	if errDial := d.DialAndSend(m); errDial != nil {
 		return errors.WithMessage(errDial, "could not dial and send")
 	}
 	return nil
