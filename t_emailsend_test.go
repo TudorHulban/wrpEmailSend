@@ -6,11 +6,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// testing with Mail Hog
+// tested with: https://github.com/camptocamp/docker_smtp
 func TestEmailSend(t *testing.T) {
 	cfg := EmailServerConfig{
 		URI:      "0.0.0.0",
-		Port:     1025,
+		Port:     2525,
 		User:     "",
 		Password: "",
 	}
@@ -18,11 +18,12 @@ func TestEmailSend(t *testing.T) {
 	s, errNew := NewEmailServer(cfg)
 	if assert.Nil(t, errNew) {
 		em := EmailData{
+			Important:   true,
+			Subject:     "Test Embed",
 			From:        "john@loco.com",
 			To:          []string{"mary@loco.com"},
-			MessageHTML: "hi <img src=\"cid:y.png\" alt=\"My image\" />",
-			Attachments: []string{"x.png"},
-			Embedded:    []string{"y.png"},
+			MessageHTML: `Hi! <img src="cid:x.png" alt="My image" /> Second: <img src="cid:y.png" alt="My image" />`,
+			Embedded:    []string{"x.png", "y.png"},
 		}
 
 		assert.Nil(t, s.SendEmail(em))
