@@ -1,5 +1,5 @@
 # wrpEmailSend
-Package with helper for email send.
+Package with helper for email send with embedded images.
 
 # Testing
 ```
